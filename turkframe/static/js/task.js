@@ -26,9 +26,20 @@ $(window).on("message", function(event)
 		messageParts = event.data.split("|");
 		if (messageParts[0] == "turkframe")
 		{
+			var messageData;
+			if (messageParts[2])
+			{
+				messageData = JSON.parse(messageParts[2]);
+			}
+			
 			switch(messageParts[1])
 			{
 				case "finished":
+					if (messageData["sessionId"])
+					{
+						psiTurk.recordUnstructuredData("sessionId", messageData["sessionId"]);
+						psiTurk.saveData();
+					}
 					psiTurk.completeHIT();
 			}
 		}

@@ -5,19 +5,32 @@
 var Turkframe = function()
 {
 
-	this.messageUp = function(message)
+	// Check if the experiment is running inside an iframe.
+	this.isFramed = function()
 	{
-		// If we're running in an iframe (i.e. through turkframe), tell the parent that we're done.
-		// These messages can be anything in the "turkframe|xyz" form, where "xyz" is the message.
-		if (window.self !== window.parent)
+		return window.self !== window.parent;
+	}
+
+	// If we're running in an iframe (i.e. through turkframe), send a message to the parent.
+	// These messages take the form of "turkframe|message|data", where the last term is an
+	// optional string of JSON to be parsed later by the parent.
+	this.messageUp = function(message, data)
+	{
+		if (this.isFramed())
 		{
-			window.parent.postMessage("turkframe|" + message, "*");
+			messageText = "turkframe|" + message;
+			if (data)
+			{
+				messageText += "|" + JSON.stringify(data)
+			}
+			window.parent.postMessage(messageText, "*");
 		}
 	};
 	
-	this.messageFinished = function()
+	// Send as message to the parent that the experiment is over.
+	this.messageFinished = function(data)
 	{
-		messageUp("finished");
+		messageUp("finished", data);
 	};
 
 	return this;
