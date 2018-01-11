@@ -24,9 +24,12 @@ $(window).on("message", function(event)
 		switch (event.data["message"])
 		{
 			case "finished":
-				if (event.data["data"] && event.data["data"]["sessionId"])
+				if (event.data["data"])
 				{
-					psiTurk.recordUnstructuredData("sessionId", event.data["data"]["sessionId"]);
+					Object.keys(event.data["data"]).forEach(function(key)
+					{
+						psiTurk.recordUnstructuredData(key, event.data["data"][key]);
+					});
 				}
 				psiTurk.saveData();
 				psiTurk.completeHIT();
