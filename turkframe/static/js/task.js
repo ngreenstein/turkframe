@@ -13,35 +13,23 @@ var psiTurk = new PsiTurk(uniqueId, adServerLoc, mode);
 var mycondition = condition;	// these two variables are passed by the psiturk server process
 var mycounterbalance = counterbalance;	// they tell you which condition you have been assigned to
 
-var currentview;
-
 psiTurk.preloadPages(["frame.html"]);
 
-// Listen for the 'experiment finished' message
+// Listen for the 'experiment finished' message from the framed experiment
 $(window).on("message", function(event)
 {
-	event = event.originalEvent;
-	if (event.data && typeof event.data === "string")
+	event = event.originalEvent; // Get rid of the jQuery wrapper
+	if (event.data && event.data["turkframe"] && event.data["turkframe"] === true)
 	{
-		messageParts = event.data.split("|");
-		if (messageParts[0] == "turkframe")
+		switch (event.data["message"])
 		{
-			var messageData;
-			if (messageParts[2])
-			{
-				messageData = JSON.parse(messageParts[2]);
-			}
-			
-			switch(messageParts[1])
-			{
-				case "finished":
-					if (messageData["sessionId"])
-					{
-						psiTurk.recordUnstructuredData("sessionId", messageData["sessionId"]);
-						psiTurk.saveData();
-					}
-					psiTurk.completeHIT();
-			}
+			case "finished":
+				if (event.data["data"] && event.data["data"]["sessionId"])
+				{
+					psiTurk.recordUnstructuredData("sessionId", event.data["data"]["sessionId"]);
+				}
+				psiTurk.saveData();
+				psiTurk.completeHIT();
 		}
 	}
 });

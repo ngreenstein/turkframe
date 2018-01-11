@@ -18,12 +18,12 @@ var Turkframe = function()
 	{
 		if (this.isFramed())
 		{
-			messageText = "turkframe|" + message;
-			if (data)
-			{
-				messageText += "|" + JSON.stringify(data)
-			}
-			window.parent.postMessage(messageText, "*");
+			message = {
+				turkframe: true,
+				message: message
+			};
+			if (data) message.data = data;
+			window.parent.postMessage(message, "*");
 		}
 	};
 	
