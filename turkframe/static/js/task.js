@@ -5,6 +5,7 @@
  */
 
 // The base URL for the external experiment. The PsiTurk UID will be appended to the end.
+// TODO maybe add a method for people to point towards their URL instead of changing this directly
 var experimentUrl = "http://localhost:5000?uid="
 
 // Initalize psiturk object
@@ -23,6 +24,7 @@ $(window).on("message", function(event)
 	{
 		switch (event.data["message"])
 		{
+			// TODO maybe add a way to register message handlers instead of making people add cases here
 			case "finished":
 				if (event.data["data"])
 				{
