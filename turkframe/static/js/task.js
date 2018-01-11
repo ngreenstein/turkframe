@@ -5,8 +5,10 @@
  */
 
 // The base URL for the external experiment. The PsiTurk UID will be appended to the end.
+// This URL must be ready for a new component to be appended to its query string. So, if it doesn't
+// have one yet, end with a trailing `?`.
 // TODO maybe add a method for people to point towards their URL instead of changing this directly
-var experimentUrl = "http://localhost:5000?uid="
+var experimentUrl = "http://localhost:5000?custom=hi&"
 
 // Initalize psiturk object
 var psiTurk = new PsiTurk(uniqueId, adServerLoc, mode);
@@ -15,6 +17,17 @@ var mycondition = condition;	// these two variables are passed by the psiturk se
 var mycounterbalance = counterbalance;	// they tell you which condition you have been assigned to
 
 psiTurk.preloadPages(["frame.html"]);
+
+var appendPsiturkParamsToUrl = function(url)
+{
+	var params = {
+		psiturkUid: uniqueId,
+		psiturkCondition: mycondition,
+		psiturkCounter: counterbalance
+	};
+	var queryString = $.param(params);
+	return url += queryString;
+};
 
 // Listen for the 'experiment finished' message from the framed experiment
 $(window).on("message", function(event)
@@ -48,5 +61,5 @@ $(window).on("load", function() {
 			event.target.contentWindow.focus();
 		}
 	});
-	$("#mainFrame").attr("src", experimentUrl + uniqueId)
+	$("#mainFrame").attr("src", appendPsiturkParamsToUrl(experimentUrl));
 });
