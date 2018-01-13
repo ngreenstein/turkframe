@@ -17,5 +17,6 @@ Turkframe provides a 'wrapper' PsiTurk project to handle mTurk integration. When
 
 1. Modify the `turkframe` PsiTurk project's config files, templates, styles, etc. to suit your needs.
 2. Customize the inline script in `templates/exp.html` to point Turkframe towards your experiment and register any custom message handlers.
-3. From your experiment, you may call `Turkframe.messageUp()` to send custom messages to your handlers.
-4. From your experiment, call `Turkframe.messageFinished()` when ready to hand control back to PsiTurk.
+3. Include a copy of the `turkframe.js` API in your experiment.
+4. From your experiment, you may call `Turkframe.messageUp()` to send custom messages to your handlers.
+5. From your experiment, call `Turkframe.messageFinished()` when ready to hand control back to PsiTurk.
