@@ -14,13 +14,34 @@ $(document).on("ready", function() {
 	_tf_pageReady = true;
 });
 
+// Utility function to grab the value of a given parameter from the URL query string.
+// Returns the value if available or `false` if not.
+// NOTE: This may not handle every edge case. URLSearchParams isn't widely supported
+// yet, and this block isn't sophisticated enough to handle things like duplicate
+// parameters (you'll just get the first match). So keep it simple; make sure you're
+// passing a relatively clean query string. An example that works fine:
+// `?customStuff=hello%20world&psiturkUid=debug123abc:debug789xyz`.
+var _tf_getQueryParam = function(param)
+{
+	var queryString = window.location.search;
+	var pattern = RegExp(param + "=([^&]+)", "g"); // whatever param followed by an equals sign followed by anything but an ampersand
+	var matches = pattern.exec(queryString);
+	if (matches && matches.length >= 2)
+	{
+		return decodeURIComponent(matches[1]); // given duplicates in the query string, just returns the first
+	}
+	return false;
+};
+
 // Utility function to build the query string for the framed experiment
 var _tf_appendPsiturkParamsToUrl = function(url)
 {
+	var workerId = _tf_getQueryParam("workerId"); // `workerId` isn't exposed to the template, but exists in the query string
 	var params = {
 		psiturkUid: uniqueId,
+		psiturkWorkerId: workerId,
 		psiturkCondition: condition,
-		psiturkCounter: counterbalance
+		psiturkCounter: counterbalance,
 	};
 	var queryString = $.param(params);
 	return url += queryString;

@@ -38,6 +38,14 @@ var Turkframe =
 		return false;
 	},
 	
+	// Returns the experiment's PsiTurk wokerId if it has one, of `false` if it doesn't.
+	getWorkerId: function()
+	{
+		var workerId = this.getQueryParam("psiturkWorkerId");
+		if (workerId) return workerId;
+		return false;
+	},
+	
 	// Returns the experiment's PsiTurk condition if it has one, or `false` if it doesn't.
 	getCondition: function()
 	{
