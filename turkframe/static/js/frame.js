@@ -110,7 +110,17 @@ var tf_init = function()
 				psiTurk.recordUnstructuredData(key, data[key]);
 			});
 			psiTurk.saveData();
-			psiTurk.completeHIT();
+			// Right before ending the HIT, tell PsiTurk that the user has started the experiment.
+			// completeHIT() gets called whether the POST fails or succeeds.
+			// This hopefully fixes issues with closing the loop back to mturk, but doesn't prevent
+			// people from coming back once they've started (which happens if we call this when
+			// the user *acutally* starts).
+			$.ajax("inexp",
+			{
+					type: "POST",
+					data: {uniqueId: psiTurk.taskdata.id},
+					complete: function() { psiTurk.completeHIT(); },
+			});
 		}
 	});
 	
